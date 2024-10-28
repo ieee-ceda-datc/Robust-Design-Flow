@@ -1,0 +1,3 @@
+[submodule "flow/OpenROAD-flow-scripts"]
+	path = flow/OpenROAD-flow-scripts
+	url = https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts.git
