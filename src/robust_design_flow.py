@@ -59,66 +59,52 @@ class RobustDesignFlow():
             logger.addHandler(f_handler)
         return logger
 
+    def process_config(self, config_yml):
+        self.logger.info("Processing config file...")
+
+        with open(config_yml) as f:
+            self.config = yaml.safe_load(f)
+
+        # FIXME: Get the RDF installation directory from user config file.
+        self.valid_stages = ["synth","floorplan","global_place","detail_place","cts","global_route","detail_route"]
+        if not all(k in self.valid_stages for k in self.config.keys()):
+            self.logger.error(f"Input YML file must contain options for all stages of the flow: {valid_stages}")
+        
+        self.flow = []
+        for k, v in self.config.items():
+            if v["tool"] == "openroad":
+                run_cmds, _ = self.orfs_stage(k)
+                self.flow.append(run_cmds)
+            else:
+                # TODO support for external tools
+                _, package_cmd = self.orfs_stage(k)
+                self.flow.append(package_cmd)
+                raise NotImplementedError 
+
+    def orfs_stage(self, stage):
+        base_cmd = ""
+        base_cmd += f"make -f {self.orfs_make} "
+        base_cmd += f"FLOW_HOME={self.orfs_flow} "
+        base_cmd += f"DESIGN_CONFIG={self.orfs_design_mk} "
+        base_cmd += f"WORK_HOME={self.workdir} "
+        run_cmds = [(base_cmd + stage, None)]
+        run_cmds += [(base_cmd + "handoff", None)]
+        # env=os.environ.copy()
+        # env["ODB_FILE"] = orfs_results/f"{result}.odb"
+        # env["DEF_FILE"] = orfs_results/f"{result}.odb.def"
+        # run_script = "run RUN_SCRIPT="+str(self.src_dir/"create_odb.tcl")
+        # package_cmd = [(base_cmd + run_script, env)]
+        return run_cmds, None #package_cmd
 
     def run(self):
-        src_dir = Path("../src")
-        orfs_dir = Path("../flow/OpenROAD-flow-scripts")
-        orfs_flow = orfs_dir/"flow"
-        orfs_make = orfs_flow/"Makefile"
-        orfs_platform = "nangate45"
-        orfs_design = "gcd"
-        orfs_design_mk = orfs_flow/f"designs/{orfs_platform}/{orfs_design}/config.mk"
-        orfs_results = self.workdir/f"results/{orfs_platform}/{orfs_design}/base"
-        base_cmd = ""
-        base_cmd += f"make -f {orfs_make} "
-        base_cmd += f"FLOW_HOME={orfs_flow} "
-        base_cmd += f"DESIGN_CONFIG={orfs_design_mk} "
-        base_cmd += f"WORK_HOME={self.workdir} "
-        for stage, results in [#("synth",["1_synth"]),
-                                ("floorplan", ["2_floorplan"] ),
-                            #    ("place", ["3_3_place_gp","3_place"]),
-                            #    ("route", ["5_1_grt","5_2_route","5_route"]),
-                            #   ("finish", ["2_floorplan","3_3_place_gp","3_place","5_1_grt","5_2_route","5_route"]),
-        ]:
-                #["synth", "floorplan", "3_3_place_gp.odb", "place", # TODO need to add the absolute Paths
-                #"cts", "5_1_grt.odb", "5_2_route.odb", "route", "finish"]:
-                # [ "1_synth.v", "2_floorplan.odb", "3_3_place_gp.odb", "3_place.odb",
-                # "4_cts.odb", "5_1_grt.odb", "5_2_route.odb", "5_route.odb", "6_final.odb"]:
-            cmd = base_cmd + stage
-            self.logger.info(f"running cmd={cmd}")
-            p = subprocess.run(cmd,shell=True)
-            cmd = [base_cmd + "handoff"]
-            self.logger.info(f"running cmd={cmd}")
-            p = subprocess.run(cmd,shell=True)
-            # for result in results:
-            #     old_odb =  orfs_results/f"{result}.odb"
-            #     cmd = f"rm {old_odb}"
-            #     self.logger.info(f"running cmd={cmd}")
-            #     p = subprocess.run(cmd,shell=True)
-            #     env=os.environ.copy()
-            #     env["ODB_FILE"] = orfs_results/f"{result}_new.odb"
-            #     env["DEF_FILE"] = orfs_results/f"{result}.odb.def"
-            #     run_script = "run RUN_SCRIPT="+str(src_dir/"create_odb.tcl")
-            #     cmd = base_cmd + run_script
-            #     self.logger.info(f"running cmd={cmd}")
-            #     p = subprocess.run(cmd,shell=True,env=env)
-
-
-            # for result in results:
-            #     cmd = base_cmd + str(orfs_results/f"{result}.odb.v")
-            #     p = subprocess.run(cmd,shell=True)
-            #     if stage is not "synth":
-            #         cmd = base_cmd + str(orfs_results/f"{result}.odb.def")
-            #         p = subprocess.run(cmd,shell=True)
-            
-        # p = subprocess.run("ls -rtl *",
-        #                  stdout=subprocess.PIPE,
-        #                  stderr=subprocess.STDOUT,
-        #                  shell=True)
-        print(p)
-
-        pass
- 
+        for cmds in self.flow:
+            for cmd, env in cmds:
+                self.logger.info(f"running cmd={cmd}")
+                if env is not None:
+                    p = subprocess.run(cmd,shell=True,env=env)
+                else:
+                    p = subprocess.run(cmd,shell=True)
+             
     def process_inputs(self):
         # Defaults
         script_dir = Path(__file__).resolve().parent.parent
@@ -132,10 +118,6 @@ class RobustDesignFlow():
         group.add_argument("-q", "--quiet", action="store_true",
                 help = '''Supresses all informational messages and only
                             displays warnings and errors.''')
-        group.add_argument("-d", "--debug", action="store_true",
-                help = '''Displays additional debug messages for 
-                            software debug. Warning: This can lead to 
-                            significant increase in messages.''')
         parser.set_defaults(func=lambda : parser.print_help())
         parser.add_argument("-t", "--test", action="store_true",
                 help = "Enables test mode override of the defaults")                   
@@ -155,23 +137,18 @@ class RobustDesignFlow():
                 help = '''Continues an existing job or run.''')
         parser.add_argument("-j", "--job_id", type=Path,
                 help="Enter the job_id of the run")
+        
+        
+        parser.add_argument("-d", "--design", default="gcd", required=True,
+                help = "Name of the design in ORFS to run")
+        parser.add_argument("-m", "--custom_make",
+                help = '''Point to a custom design make file instead of an exisitng ORFS design''')
+        parser.add_argument("-n", "--platform", default="nangate45", required=True,
+                help="Define the ORFS platform for the selected design")
         args = parser.parse_args()
 
-        if ((not args.test) and args.proceed and args.job_id is None):
+        if ((not args.test) and args.proceed and (args.job_id is None)):
             parser.error("--proceed requires --job_id be set to continue an existing job.")
-
-        if args.verbose:
-            severity = 'INFO'
-        elif args.quiet:
-            severity = 'WARNING'
-        elif args.debug:
-            severity = 'DEBUG'
-        else:
-            severity = None
-        self.logger = self.create_logger( log_file = args.log,
-                                        severity = severity)
-
-        config_yml = args.config
 
         if args.test:
             job_id = Path("rdf.test")
@@ -183,17 +160,38 @@ class RobustDesignFlow():
             job_id = args.job_id
         job_id.mkdir()
         self.workdir  = job_id
+    
+        self.src_dir = Path(__file__).resolve().parent
+        self.orfs_dir = self.src_dir/"../tools/OpenROAD-flow-scripts"
+        self.orfs_flow = self.orfs_dir/"flow"
+        self.orfs_make = self.orfs_flow/"Makefile"
+        self.orfs_platform = args.platform 
+        self.orfs_design = args.design
+        self.orfs_design_dir = self.orfs_flow/f"designs/{self.orfs_platform}/{self.orfs_design}"
+        self.orfs_design_mk = self.orfs_design_dir/"config.mk"
+        self.orfs_results = self.workdir/f"results/{self.orfs_platform}/{self.orfs_design}/base"
+        
+        if ((args.custom_make is not None) and args.design):
+            if(args.platform is None):
+                parser.error("--proceed requires --job_id be set to continue an existing job.")
+            elif (not self.orfs_design_dir.is_dir()):
+                parser.error(f"Using the default ORFS flow, cannot find design directory {self.orfs_design_dir}.")
+
+        if args.verbose:
+            severity = 'INFO'
+        elif args.quiet:
+            severity = 'WARNING'
+        else:
+            severity = None
+        self.logger = self.create_logger( log_file = args.log,
+                                        severity = severity)
+
+        rdf.process_config(args.config)
         self.logger.info(f"Running Job ID: {job_id}")
 
 if __name__ == '__main__':
-    
-    
-    
-
     rdf = RobustDesignFlow()
     rdf.process_inputs()
-    # rdf.process_config()
-    # rdf.write_run_scripts()
     #TODO support for continuing an existing run.
     rdf.run()
 
