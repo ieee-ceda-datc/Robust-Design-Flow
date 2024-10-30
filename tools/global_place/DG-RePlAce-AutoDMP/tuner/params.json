@@ -1,0 +1,58 @@
+{
+    "aux_input": {
+        "description": "input .aux file",
+        "default": "",
+        "required": "required for Bookshelf"
+    },
+    "lef_input": {
+        "description": "input LEF file",
+        "default": "",
+        "required": "required for LEF/DEF"
+    },
+    "def_input": {
+        "description": "input DEF file",
+        "default": "",
+        "required": "required for LEF/DEF"
+    },
+    "verilog_input": {
+        "description": "input VERILOG file, provide circuit netlist information if it is not included in DEF file",
+        "default": "",
+        "required": "optional for LEF/DEF"
+    },
+    "gpu": {
+        "description": "enable gpu or not",
+        "default": 1
+    },
+    "gpu_id": {
+        "description": "which gpu to use",
+        "default": 0
+    },
+    "target_density": {
+        "description": "target density",
+        "default": 0.8
+    },
+    "result_dir": {
+        "description": "result directory for output",
+        "default": "results"
+    },
+    "max_num_level": {
+        "description": "maximum number of levels in the netlist",
+        "default": 2
+    },
+    "coarsening_ratio": {
+        "description": "coarsening ratio for multilevel partitioning",
+        "default": 20
+    },
+    "halo_width": {
+        "description": "halo width",
+        "default": 2
+    },
+    "virtualIter": {
+        "description": "number of virtual iterations",
+        "default": 4
+    },
+    "numHops": {
+        "description": "number of hops",
+        "default": 4
+    }
+}
