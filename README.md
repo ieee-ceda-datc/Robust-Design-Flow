@@ -130,4 +130,9 @@ To contribute, create a PR to this GitHub repository. Developer certificates wil
 
 References
 ---
-1. 
+1. V. A. Chhabria, V. Gopalakrishnan, A. B. Kahng, S. Kundu, Z. Wang, B.-Y. Wu and D. Yoon, "Strengthening the Foundations of IC Physical Design and ML EDA Research", 
+*Proc. International Conference on Computer-Aided Design*, 2024.
+
+2. A. B. Kahng and Z. Wang, "DG-RePlAce: A Dataflow-Driven GPU-Accelerated Analytical Global Placement Framework for Machine Learning Accelerators", 
+*IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems*, 2024.
+
