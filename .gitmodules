@@ -1,3 +1,6 @@
 [submodule "flow/OpenROAD-flow-scripts"]
 	path = tools/OpenROAD-flow-scripts
 	url = https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts.git
+[submodule "tools/DG-RePlAce-AutoDMP"]
+	path = tools/DG-RePlAce-AutoDMP
+	url = git@github.com:ABKGroup/DG-RePlAce-AutoDMP.git
