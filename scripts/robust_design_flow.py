@@ -164,12 +164,12 @@ class RobustDesignFlow():
         current_path = Path.cwd()
         
         parser = argparse.ArgumentParser(prog = "RobustDesignFlow",
-                description = '''Robust Design Flow(RDF).''')
+                description = '''Robust Design Flow (RDF).''')
         group = parser.add_mutually_exclusive_group()
         group.add_argument("-v", "--verbose", action="store_true",
                 help = "Enables verbose mode with detailed information.")
         group.add_argument("-q", "--quiet", action="store_true",
-                help = '''Supresses all informational messages and only
+                help = '''Suppresses all informational messages and only
                             displays warnings and errors.''')
         parser.set_defaults(func=lambda : parser.print_help())
         parser.add_argument("-t", "--test", action="store_true",
@@ -180,7 +180,7 @@ class RobustDesignFlow():
                                 help = ''' YAML file containing the target flow''')
         
         parser.add_argument("-l", "--log_file", type=Path,
-                help = "Log file for run.",dest='log')
+                help = "Log file for the run.",dest='log')
         
         # Mutually exclusive group to start a new run or contiunue an existing run.
         group = parser.add_mutually_exclusive_group(required=True)
@@ -195,7 +195,7 @@ class RobustDesignFlow():
         parser.add_argument("-d", "--design", default="gcd", required=True,
                 help = "Name of the design in ORFS to run")
         parser.add_argument("-m", "--custom_design_make",
-                help = '''Point to a custom design make file instead of an exisitng ORFS design''')
+                help = '''Point to a custom design make file instead of an existing ORFS design''')
         parser.add_argument("-n", "--platform", default="nangate45", required=True,
                 help="Define the ORFS platform for the selected design")
         args = parser.parse_args()
