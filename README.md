@@ -117,16 +117,16 @@ Users in the makefile will have access to all the variables that are provided by
 Additionally, the Python script will provide pointers to the source and destination DEF files or Verilog files for the tool to consume and generate, i.e., `RDF_DEF_FILE`, `RDF_VERILOG_FILE`, and `RDF_DEF_OUT`. Any additional user parameters passed to the YAML file will be passed as Makefile variables with the RDF prefix. 
 
 
-Contributing Your Tool into DATC RDF
+Contributing Your Tool to DATC RDF
 ---
 
-We welcome contributions to DATC RDF. Contribtions include:
-- Source code of your point tool that can be added as a submodule to our tools directory. With updated Makefile the make target and yaml to support in
-- Binary of your point tool if distributable which can also be added to our tools directory and details in the README on the system configuration which that binary was built. With updated
+We welcome contributions to DATC RDF. Contributions include:
+- Source code of your point tool that can be added as a submodule to our tools directory with the updated Makefile containing the new make target and yaml to support the new tool
+If your point tool is distributable, you can also add the binary to our tools directory, along with details in the README on the system configuration in which that binary was built. This should also be accompanied by an update to the Makefile with a new target and the corresponding YAML file. 
 - New testcases and enablements
-- 
 
-To contribute create a PR to this GitHub repository. Significant contributions of differnt point tools will be provided developer certificates at next-year's ICCAD Contest Special Session. 
+
+To contribute, create a PR to this GitHub repository. Developer certificates will be provided for significant contributions at next year's ICCAD Contest Special Session. 
 
 References
 ---
