@@ -120,6 +120,10 @@ rdf_run_TritonRoute:
 	$(RDF_TRITON_ROUTE_EXE) -lef $(TECH_LEF) -def $(RDF_DEF_FILE) -guide $(RESULTS_DIR)/route.guide -output $(RDF_DEF_OUT)
 ```
 
+User in the makefile will have access to all the variables that are provided by OpenROAD such as `TECH_LEF, SC_LEF ADDITIONAL_LEFS, SDC_FILE`. Users must add their tool to the makfeile with the prefix `rdf_run_<tool name in config yml>`
+
+Additionaly the python script will provide pointer to the source and destination DEF files or verilog files for the tool to consume and generate, i.e. `RDF_DEF_FILE`, `RDF_VERILOG_FILE` and `RDF_DEF_OUT`. Any additional user paramters passed to the yml file will be passed as Makefile variables with the RDF prefix. 
+
 
 Contributing Your Tool into DATC RDF
 ---
