@@ -1,0 +1,38 @@
+---
+synth:
+  tool: openroad
+  user_parms: []
+floorplan:
+  tool: openroad
+  user_parms: []
+
+global_place:
+  tool: openroad
+  user_parms: []
+
+detail_place:
+  tool: openroad
+  user_parms: []
+
+cts:
+  tool: openroad
+  user_parms: []
+
+global_route:
+  tool: openroad
+  user_parms: []
+
+# detail_route:
+#   tool: openroad
+#   user_parms: []
+
+# Sample custom flow
+detail_route:
+    tool: TritonRoute 
+    user_parms: 
+      GUIDE : route.guide
+      TEST : testing
+
+finish:
+  tool: openroad
+  user_parms: []
