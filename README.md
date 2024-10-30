@@ -9,6 +9,9 @@ IEEE DATC Robust Design Flow (DATC RDF) is intended (i) to preserve and integrat
 
 We currently support an academic point tool-based configurable flow that is wrapped around the [Single-app integrated OpenROAD flow](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts).
 
+#### Build RDF
+RDF depends on [OpenROAD-flow-scripts](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts). Please refer build instructions from ORFS repository and [documentation](https://openroad-flow-scripts.readthedocs.io/en/latest/index2.html). Once ORFS is built, follow instructions below to run RDF.
+
 #### Academic Point Tool-Based Configurable Flow
 
 The academic point-tool-based flow is a conventional RDF flow that uses a flow configuration file in YAML format. An example RDF flow configuration file is shown below ([Example](./scripts/sample_run.yml)).
@@ -51,11 +54,19 @@ In the flow configuration, the user can set whether the flow points to the defau
 
 #### Running the tool
 
+An example run using the GCD design in OpenROAD for Nangate45 is shown below:
+
+Before running this command please modify the [./tools/OpenROAD-flow-scripts/flow/designs/nangate45/gcd/config.mk](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/blob/master/flow/designs/nangate45/gcd/config.mk) to use $DESIGN_HOME instead of "./designs".
+
 You can run the tool from the command line with the following script.
 
 ```shell
-python3 <scripts_dir>/robust_design_flow.py
+mkdir run
+cd run
+python3 ../scripts/robust_design_flow.py -r -c ../scripts/sample_run.yml -d gcd -n nangate45
 ```
+
+Below is the explanation of the different parameters available for our script. 
 
 ```
 usage: RobustDesignFlow [-h] [-v | -q] [-t] -c CONFIG [-l LOG] (-r | -p) [-j JOB_ID] -d DESIGN [-m CUSTOM_DESIGN_MAKE] -n PLATFORM
@@ -81,12 +92,6 @@ options:
                         Point to a custom design make file instead of an existing ORFS design
   -n PLATFORM, --platform PLATFORM
                         Define the ORFS platform for the selected design
-```
-
-An example run using the GCD design in OpenROAD for Nangate45 is shown below:
-
-```shell
-python3 ../scripts/robust_design_flow.py -r -c ../scripts/sample_run.yml -d gcd -n nangate45
 ```
 
 
