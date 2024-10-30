@@ -120,8 +120,14 @@ Additionally, the Python script will provide pointers to the source and destinat
 Contributing Your Tool into DATC RDF
 ---
 
-We welcome contributions to DATC RDF.
+We welcome contributions to DATC RDF. Contribtions include:
+- Source code of your point tool that can be added as a submodule to our tools directory. With updated Makefile the make target and yaml to support in
+- Binary of your point tool if distributable which can also be added to our tools directory and details in the README on the system configuration which that binary was built. With updated
+- New testcases and enablements
+- 
+
+To contribute create a PR to this GitHub repository. Significant contributions of differnt point tools will be provided developer certificates at next-year's ICCAD Contest Special Session. 
 
 References
 ---
-1.
+1. 
