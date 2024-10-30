@@ -22,16 +22,16 @@ global_route:
   tool: openroad
   user_parms: []
 
-# detail_route:
-#   tool: openroad
-#   user_parms: []
+detail_route:
+  tool: openroad
+  user_parms: []
 
 # Sample custom flow
-detail_route:
-    tool: TritonRoute 
-    user_parms: 
-      GUIDE : route.guide
-      TEST : testing
+# detail_route:
+#     tool: TritonRoute 
+#     user_parms: 
+#       GUIDE : route.guide
+#       TEST : testing
 
 finish:
   tool: openroad
