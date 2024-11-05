@@ -1,7 +1,13 @@
 DATC Robust Design Flow
 ===
+The [Design Automation Technical Committee (DATC)](https://ieee-ceda.org/activities/technical-committees/datc),  is a technical member committee of IEEE [Council on Electronic Design Automation (CEDA)](https://ieee-ceda.org/).  The mission of DATC is to serve as a central organization and platform
+that addresses key challenges in design automation, facilitates collaboration on public design flows and testcases, and organizes relevant workshops, meetings, and publications. 
+In recent years, DATC efforts have focused on building public design flows, defining key metrics, and enabling ML EDA. The overarching goal is to ensure continuous progress in EDA research by maintaining baseline calibrations, 
+tracking metrics, and integrating point CAD tools into a cohesive flow to promote cross-stage research and innovation.
 
-IEEE DATC Robust Design Flow (DATC RDF) is intended (i) to preserve and integrate leading research codes, including those from past academic contests, and (ii) to provide a foundation and backplane for academic research in the RTL-to-GDS IC implementation arena.
+A critical part of DATC activities every year includes maintaining and enhancing a public flow available in this repository called the Robust Design Flow (RDF). IEEE DATC RDF is intended (i) to preserve and integrate leading research codes, including those from past academic contests, and (ii) to provide a foundation and backplane for academic research in the RTL-to-GDS IC implementation arena. Unlike other open-source design flows RDF creates a framework to mix and match point tools at different stages of the flow. 
+
+
 
 ## DATC RDF: Getting Started
 
@@ -10,7 +16,7 @@ IEEE DATC Robust Design Flow (DATC RDF) is intended (i) to preserve and integrat
 We currently support an academic point tool-based configurable flow that is wrapped around the [Single-app integrated OpenROAD flow](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts).
 
 #### Build RDF
-RDF depends on [OpenROAD-flow-scripts](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts). Please refer build instructions from ORFS repository and [documentation](https://openroad-flow-scripts.readthedocs.io/en/latest/index2.html). Once ORFS is built, follow instructions below to run RDF.
+RDF depends on [OpenROAD-flow-scripts](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts). Please refer build instructions from ORFS repository and [documentation](https://openroad-flow-scripts.readthedocs.io/en/latest/index2.html). Once ORFS is built, follow the instructions below to run RDF.
 
 #### Academic Point Tool-Based Configurable Flow
 
@@ -56,8 +62,6 @@ In the flow configuration, the user can set whether the flow points to the defau
 
 An example run using the GCD design in OpenROAD for Nangate45 is shown below:
 
-Before running this command please modify the [./tools/OpenROAD-flow-scripts/flow/designs/nangate45/gcd/config.mk](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/blob/master/flow/designs/nangate45/gcd/config.mk) to use $DESIGN_HOME instead of "./designs".
-
 You can run the tool from the command line with the following script.
 
 ```shell
@@ -66,7 +70,7 @@ cd run
 python3 ../scripts/robust_design_flow.py -r -c ../scripts/sample_run.yml -d gcd -n nangate45
 ```
 
-Below is the explanation of the different parameters available for our script. 
+Below we explain the different parameters available for our script. 
 
 ```
 usage: RobustDesignFlow [-h] [-v | -q] [-t] -c CONFIG [-l LOG] (-r | -p) [-j JOB_ID] -d DESIGN [-m CUSTOM_DESIGN_MAKE] -n PLATFORM
@@ -98,7 +102,7 @@ options:
 Adding Your Pont Tool Binaries into RDF Flow
 ---
 
-You can add your own point tool in the RDF configurable flow. First, put your point tool binary and necessary side files in the directory:
+You can add your own point tool in the RDF configurable flow. First, put your point tool binary and necessary side files in the following directory:
 
 ```bash
 ./tools/<stage>/<tool_name>
@@ -126,7 +130,7 @@ Contributing Your Tool to DATC RDF
 ---
 
 We welcome contributions to DATC RDF. Contributions include:
-- Source code of your point tool that can be added as a submodule to our tools directory with the updated Makefile containing the new make target and yaml to support the new tool
+- Source code of your point tool that can be added as a submodule to our tools directory with the updated Makefile containing the new make target and yaml to support the new tool.
 If your point tool is distributable, you can also add the binary to our tools directory, along with details in the README on the system configuration in which that binary was built. This should also be accompanied by an update to the Makefile with a new target and the corresponding YAML file. 
 - New testcases and enablements
 
