@@ -1,9 +1,9 @@
-# Leader Board
+# Leaderboard
 Here, we provide the AutoTuner [script](./AutoTuner) to tune the hyperparameters of OpenROAD-flow-scripts for the AES, Ibex, and JPEG designs on the Nangate45 enablement, as mentioned in the [RDF-2024
-paper](https://vlsicad.ucsd.edu/Publications/Conferences/412/c412.pdf) paper. Additionally, we provide the [baseline solutions](./designs) reported in the RDF-2024 paper. 
+paper](https://vlsicad.ucsd.edu/Publications/Conferences/412/c412.pdf) paper. Additionally, we provide the [baseline solutions](./designs) reported in the RDF-2024. 
   
 
-We have also shared the [evaluation script](./AutoTuner/run_eval.sh) to evaluate your results using our flow.
+We also share the [evaluation script](./AutoTuner/run_eval.sh) to evaluate your results using our flow.
 
 ## AutoTuner
 To run AutoTuner, you need to use the [raytune.py](./AutoTuner/raytune.py) file. Before running [raytune.py](./AutoTuner/raytune.py), please make the following changes:
@@ -25,7 +25,7 @@ python3 raytune.py
 We assume that you have a routed DEF file and an SDC file. To run the evaluation, please follow these steps:
 ```bash
 cd ./AutoTuner
-## Designs name are aes, ibex and jpeg
+## Design names are aes, ibex and jpeg
 ## If you plan to run other designs please create a config file for that design
 ./run_eval.sh <DEF Path> <SDC PATH> <DESIGN NAME>
 ```
