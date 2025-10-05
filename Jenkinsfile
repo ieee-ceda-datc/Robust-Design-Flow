@@ -16,7 +16,7 @@ pipeline {
 
         stage('Build OpenROAD') {
             steps {
-                sh 'cd tools/OpenROAD-flow-scripts && ./build_openroad --local'
+                sh 'cd tools/OpenROAD-flow-scripts && ./build_openroad.sh --local'
             }
         }
 
