@@ -70,10 +70,16 @@ cd run
 python3 ../scripts/robust_design_flow.py -r -c ../scripts/sample_run.yml -d gcd -n nangate45
 ```
 
+When running in automation, add `-y` (or `--yes`) to skip the interactive confirmation prompts for each stage:
+
+```shell
+python3 ../scripts/robust_design_flow.py -r -y -c ../scripts/sample_run.yml -d gcd -n nangate45
+```
+
 Below we explain the different parameters available for our script. 
 
 ```
-usage: RobustDesignFlow [-h] [-v | -q] [-t] -c CONFIG [-l LOG] (-r | -p) [-j JOB_ID] -d DESIGN [-m CUSTOM_DESIGN_MAKE] -n PLATFORM
+usage: RobustDesignFlow [-h] [-v | -q] [-t] [-y] -c CONFIG [-l LOG] (-r | -p) [-j JOB_ID] -d DESIGN [-m CUSTOM_DESIGN_MAKE] -n PLATFORM
 
 Robust Design Flow (RDF).
 
@@ -82,6 +88,7 @@ options:
   -v, --verbose         Enables verbose mode with detailed information.
   -q, --quiet           Suppresses all informational messages and only displays warnings and errors.
   -t, --test            Enables test mode override of the defaults
+  -y, --yes             Automatically confirm each stage without prompting
   -c CONFIG, --config CONFIG
                         YAML file containing the target flow
   -l LOG, --log_file LOG
@@ -144,4 +151,3 @@ References
 
 2. A. B. Kahng and Z. Wang, "DG-RePlAce: A Dataflow-Driven GPU-Accelerated Analytical Global Placement Framework for Machine Learning Accelerators", 
 *IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems*, 2024.
-

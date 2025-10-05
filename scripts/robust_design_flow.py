@@ -21,7 +21,7 @@ from datetime import datetime
 
 class RobustDesignFlow():
     def __init__(self):
-        pass
+        self.auto_confirm = False
         # self.config = None
         # self.flow = None
         # self.design_dir = None
@@ -68,7 +68,7 @@ class RobustDesignFlow():
         # FIXME: Get the RDF installation directory from user config file.
         self.valid_stages = {
             "synth":{"cur_stage": "synth" , "prev_stage": None},
-            "floorplan": {"cur_stage": f"{self.orfs_results}/2_4_floorplan_macro.odb" , "prev_stage": f"{self.orfs_results}/2_3_floorplan_tdms.odb"},
+            "floorplan": {"cur_stage": f"{self.orfs_results}/2_2_floorplan_macro.odb" , "prev_stage": f"{self.orfs_results}/2_1_floorplan.odb"},
             "global_place":{"cur_stage": f"{self.orfs_results}/3_3_place_gp.odb" , "prev_stage": f"{self.orfs_results}/3_2_place_iop.odb"},
             "detail_place": {"cur_stage": f"{self.orfs_results}/3_5_place_dp.odb" , "prev_stage": f"{self.orfs_results}/3_4_place_resized.odb"},
             "cts":{"cur_stage": f"{self.orfs_results}/4_1_cts.odb" , "prev_stage": f"{self.orfs_results}/3_place.odb"},
@@ -154,7 +154,8 @@ class RobustDesignFlow():
     def run(self):
         for cmd in self.flow:
             self.logger.info(f"running cmd={cmd}")
-            _ = input("Confirm continue")
+            if not self.auto_confirm:
+                _ = input("Confirm continue")
             p = subprocess.run(cmd,shell=True)
                 
              
@@ -173,7 +174,9 @@ class RobustDesignFlow():
                             displays warnings and errors.''')
         parser.set_defaults(func=lambda : parser.print_help())
         parser.add_argument("-t", "--test", action="store_true",
-                help = "Enables test mode override of the defaults")                   
+                help = "Enables test mode override of the defaults")
+        parser.add_argument("-y", "--yes", action="store_true",
+                help = "Automatically confirm each stage without prompting")
         
         parser.add_argument("-c",'--config', type=Path,
                                 dest='config', required=True,
@@ -240,6 +243,8 @@ class RobustDesignFlow():
         self.logger = self.create_logger( log_file = args.log,
                                         severity = severity)
 
+        self.auto_confirm = args.yes
+
         rdf.process_config(args.config)
         self.logger.info(f"Running Job ID: {job_id}")
 
@@ -248,7 +253,3 @@ if __name__ == '__main__':
     rdf.process_inputs()
     #TODO support for continuing an existing run.
     rdf.run()
-
-
-
-
