@@ -15,8 +15,7 @@ pipeline {
 
         stage('Prepare Python Environment') {
             steps {
-                sh 'python3 -m pip install --user --quiet --upgrade pip'
-                sh 'python3 -m pip install --user --quiet unittest-xml-reporting'
+                sh 'python3 -m pip install --user --break-system-packages --quiet unittest-xml-reporting'
             }
         }
 
