@@ -26,7 +26,7 @@ pipeline {
                 sh '''
                     cd tools/OpenROAD-flow-scripts
                     export OPENROAD_USE_SYSTEM_FMT=OFF
-                    ./build_openroad.sh --local --latest
+                    ./build_openroad.sh --local
                     source env.sh
                 '''
             }
