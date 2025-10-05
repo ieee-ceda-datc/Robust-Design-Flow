@@ -3,4 +3,4 @@
 	url = https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts.git
 [submodule "tools/global_place/DG-RePlAce-AutoDMP"]
 	path = tools/global_place/DG-RePlAce-AutoDMP
-	url = git@github.com:ABKGroup/DG-RePlAce-AutoDMP.git
+	url = https://github.com/ABKGroup/DG-RePlAce-AutoDMP.git
