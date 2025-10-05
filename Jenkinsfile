@@ -50,7 +50,6 @@ pipeline {
         always {
             junit allowEmptyResults: true, testResults: 'rdf.test/logs/*.xml'
             archiveArtifacts artifacts: 'rdf.test/**', allowEmptyArchive: true
-            cleanWs()
         }
     }
 }
