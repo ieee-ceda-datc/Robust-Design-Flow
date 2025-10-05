@@ -11,13 +11,17 @@ platform and compares the resulting report artifacts against the goldens in
   `README.md` for build instructions).
 - `make`, `python3`, and all runtime dependencies required by ORFS must be on
   your `PATH`.
+- The regression runner depends on `unittest-xml-reporting`:
+  ```bash
+  python3 -m pip install --user unittest-xml-reporting
+  ```
 
 ## Running the Regression
 
 From the repository root:
 
 ```bash
-python3 -m unittest discover -s tests
+python3 tests/run_regression.py
 ```
 
 This takes about a minute and streams the full flow output to the terminal so
