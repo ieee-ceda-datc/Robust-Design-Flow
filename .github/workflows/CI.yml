@@ -1,0 +1,84 @@
+name: Jenkins CI Regression
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  trigger-jenkins:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Jenkins Job
+        id: trigger
+        run: |
+          echo "🚀 Triggering Jenkins job..."
+          # Send trigger and extract the queue URL from the Location header
+          QUEUE_URL=$(curl -s -X POST -D - \
+            -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_TOKEN }}" \
+            "${{ secrets.JENKINS_URL }}/job/${{ secrets.JENKINS_JOB }}/build?token=${{ secrets.JENKINS_TRIGGER }}" \
+            | grep -i Location | awk '{print $2}' | tr -d '\r\n')
+          
+          echo "Queue URL: $QUEUE_URL"
+          echo "queue_url=${QUEUE_URL}" >> $GITHUB_OUTPUT
+
+      - name: Wait for Jenkins to Start (Get Build Number)
+        id: wait_for_start
+        run: |
+          echo "⏳ Waiting for Jenkins to assign build number..."
+          ATTEMPTS=0
+          BUILD_NUMBER=""
+          QUEUE_URL="${{ steps.trigger.outputs.queue_url }}api/json"
+
+          until [ -n "$BUILD_NUMBER" ] && [ "$BUILD_NUMBER" != "null" ]; do
+            sleep 10
+            ATTEMPTS=$((ATTEMPTS + 1))
+            BUILD_NUMBER=$(curl -s -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_TOKEN }}" "$QUEUE_URL" | jq -r '.executable.number')
+            echo "[$ATTEMPTS] Build number: $BUILD_NUMBER"
+            if [ $ATTEMPTS -gt 30 ]; then
+              echo "❌ Timed out waiting for Jenkins to start."
+              exit 1
+            fi
+          done
+
+          BUILD_URL="${{ secrets.JENKINS_URL }}/job/${{ secrets.JENKINS_JOB }}/${BUILD_NUMBER}/"
+          echo "✅ Jenkins build started: #$BUILD_NUMBER"
+          echo "🔗 Jenkins console: ${BUILD_URL}console"
+          echo "build_number=$BUILD_NUMBER" >> $GITHUB_OUTPUT
+          echo "build_url=$BUILD_URL" >> $GITHUB_OUTPUT
+
+      - name: Wait for Jenkins Build to Finish
+        id: wait_for_finish
+        run: |
+          echo "⏳ Polling Jenkins for build completion..."
+          ATTEMPTS=0
+          BUILD_STATUS="PENDING"
+          BUILD_NUMBER="${{ steps.wait_for_start.outputs.build_number }}"
+          BUILD_URL="${{ steps.wait_for_start.outputs.build_url }}"
+
+          until [ "$BUILD_STATUS" = "SUCCESS" ] || [ "$BUILD_STATUS" = "FAILURE" ]; do
+            sleep 30
+            ATTEMPTS=$((ATTEMPTS + 1))
+            BUILD_STATUS=$(curl -s -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_TOKEN }}" \
+              "${BUILD_URL}api/json" | jq -r '.result')
+            echo "[$ATTEMPTS] Jenkins build status: $BUILD_STATUS"
+            if [ $ATTEMPTS -gt 60 ]; then
+              echo "❌ Timed out after 30 minutes waiting for Jenkins build #$BUILD_NUMBER"
+              exit 1
+            fi
+          done
+
+          echo "🏁 Final Jenkins status for build #$BUILD_NUMBER: $BUILD_STATUS"
+          echo "status=$BUILD_STATUS" >> $GITHUB_OUTPUT
+
+      - name: Mark Failed if Jenkins Failed
+        if: steps.wait_for_finish.outputs.status == 'FAILURE'
+        run: |
+          echo "❌ Jenkins build failed."
+          exit 1
+
+      - name: Jenkins Build Successful
+        if: steps.wait_for_finish.outputs.status == 'SUCCESS'
+        run: |
+          echo "✅ Jenkins Regression Passed Successfully"
+          echo "🔗 Build link: ${{ steps.wait_for_start.outputs.build_url }}"

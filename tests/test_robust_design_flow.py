@@ -1,6 +1,8 @@
+import difflib
 import json
 import math
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -82,7 +84,17 @@ class RobustDesignFlowCLITests(unittest.TestCase):
         golden_report = repo_root / 'tests' / 'golden' / '6_report.log.ok'
         produced = self._normalize_report(report_path.read_text())
         expected = self._normalize_report(golden_report.read_text())
-        self.assertEqual(produced, expected)
+        if produced != expected:
+            diff = '\n'.join(
+                difflib.unified_diff(
+                    expected.splitlines(),
+                    produced.splitlines(),
+                    fromfile='expected',
+                    tofile='produced',
+                    lineterm='',
+                )
+            )
+            self.fail(f"Normalized report mismatch:\n{diff}")
 
         json_report_path = work_home / 'logs' / 'nangate45' / 'gcd' / 'base' / '6_report.json'
         self.assertTrue(json_report_path.is_file(), 'Missing stage 6 report JSON')
@@ -112,9 +124,14 @@ class RobustDesignFlowCLITests(unittest.TestCase):
                 )
 
     @staticmethod
+    @staticmethod
     def _normalize_report(text: str) -> str:
+        normalized = text
+        normalized = re.sub(r'/[^\s]*/Robust-Design-Flow', '<REPO>', normalized)
+        normalized = normalized.replace('/workspace', '<REPO>')
+
         filtered = []
-        for line in text.splitlines():
+        for line in normalized.splitlines():
             if 'Log                        Elapsed/s Peak Memory/MB' in line:
                 break
             if 'Elapsed time:' in line or 'CPU time:' in line or 'Peak memory:' in line:

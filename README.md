@@ -18,6 +18,29 @@ We currently support an academic point tool-based configurable flow that is wrap
 #### Build RDF
 RDF depends on [OpenROAD-flow-scripts](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts). Please refer build instructions from ORFS repository and [documentation](https://openroad-flow-scripts.readthedocs.io/en/latest/index2.html). Once ORFS is built, follow the instructions below to run RDF.
 
+#### Containerised Setup (Recommended)
+
+Build the provided Docker image from the repository root:
+
+```bash
+docker build -t rdf-openroad-ci -f docker/Dockerfile .
+```
+
+Run the regression inside the container (the current repository is mounted at
+`/workspace`):
+
+```bash
+docker run --rm -it \
+  -v "$PWD":/workspace \
+  rdf-openroad-ci \
+  bash -lc "python3 tests/run_regression.py"
+```
+
+The same image can be used by Jenkins (see `Jenkinsfile`) to keep the CI tool
+chain reproducible. When running against a prebuilt installation (e.g.
+`/opt/Robust-Design-Flow`), set `RDF_INSTALL_ROOT` to that path; otherwise the
+scripts default to the current working copy.
+
 #### Academic Point Tool-Based Configurable Flow
 
 The academic point-tool-based flow is a conventional RDF flow that uses a flow configuration file in YAML format. An example RDF flow configuration file is shown below ([Example](./scripts/sample_run.yml)).

@@ -146,7 +146,7 @@ class RobustDesignFlow():
 
     def create_odb(self, stage, base_cmd):
         create_odb_cmd = base_cmd + " compile_odb " + \
-                            f" RUN_SCRIPT={self.src_dir/'create_odb.tcl'} " +\
+                            f" RUN_SCRIPT={self.scripts_dir/'create_odb.tcl'} " +\
                             f" RDF_ODB_FILE={stage} " +\
                             f" RDF_DEF_FILE={stage}.def "
         return [create_odb_cmd]
@@ -217,10 +217,33 @@ class RobustDesignFlow():
         job_id.mkdir()
         self.workdir  = job_id
     
-        self.src_dir = Path(__file__).resolve().parent
-        self.orfs_dir = self.src_dir/"../tools/OpenROAD-flow-scripts"
-        self.orfs_flow = self.orfs_dir/"flow"
-        self.rdf_make = self.src_dir/"Makefile"
+        workspace_root = Path(__file__).resolve().parent.parent
+
+        install_root_env = os.environ.get("RDF_INSTALL_ROOT")
+        if install_root_env:
+            candidate = Path(install_root_env).expanduser().resolve()
+            if not candidate.exists():
+                self.logger.warning(
+                    "RDF_INSTALL_ROOT=%s not found. Falling back to workspace copy.",
+                    install_root_env,
+                )
+                candidate = workspace_root
+        else:
+            candidate = workspace_root
+
+        self.install_root = candidate
+        self.workspace_scripts = workspace_root / "scripts"
+        self.install_scripts = self.install_root / "scripts"
+
+        preferred_scripts = self.workspace_scripts if self.workspace_scripts.exists() else self.install_scripts
+        self.scripts_dir = preferred_scripts
+
+        self.orfs_dir = self.install_root / "tools/OpenROAD-flow-scripts"
+        self.orfs_flow = self.orfs_dir / "flow"
+        if (self.install_scripts / "Makefile").exists():
+            self.rdf_make = self.install_scripts / "Makefile"
+        else:
+            self.rdf_make = self.workspace_scripts / "Makefile"
         # self.orfs_make = self.orfs_flow/"Makefile"
         self.orfs_platform = args.platform 
         self.orfs_design = args.design

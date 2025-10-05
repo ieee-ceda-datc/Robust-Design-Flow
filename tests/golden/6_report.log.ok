@@ -3,12 +3,12 @@ Features included (+) or not (-): +GPU +GUI +Python
 This program is licensed under the BSD-3 license. See the LICENSE file for details.
 Components of this program may be licensed under more restrictive licenses which must be honored.
 [INFO ORD-0030] Using 72 thread(s).
-read_liberty /rdf_projects/vachhabr/datc/Robust-Design-Flow/scripts//../tools/OpenROAD-flow-scripts/flow/platforms/nangate45/lib/NangateOpenCellLibrary_typical.lib
+read_liberty <REPO>/scripts//../tools/OpenROAD-flow-scripts/flow/platforms/nangate45/lib/NangateOpenCellLibrary_typical.lib
 read_db rdf.test/results/nangate45/gcd/base/6_1_fill.odb
 Deleted 0 routing obstructions
 [INFO RCX-0431] Defined process_corner X with ext_model_index 0
 [INFO RCX-0029] Defined extraction corner X
-[INFO RCX-0435] Reading extraction model file /rdf_projects/vachhabr/datc/Robust-Design-Flow/scripts//../tools/OpenROAD-flow-scripts/flow/platforms/nangate45/rcx_patterns.rules ...
+[INFO RCX-0435] Reading extraction model file <REPO>/scripts//../tools/OpenROAD-flow-scripts/flow/platforms/nangate45/rcx_patterns.rules ...
 [INFO RCX-0436] RC segment generation gcd (max_merge_res 50.0) ...
 [INFO RCX-0040] Final 1679 rc segments
 [INFO RCX-0439] Coupling Cap extraction gcd ...
