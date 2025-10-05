@@ -7,9 +7,16 @@ pipeline {
     }
 
     stages {
+        stage('Workspace Cleanup') {
+            steps {
+                cleanWs()
+            }
+        }
+
         stage('Checkout') {
             steps {
                 checkout scm
+                sh 'git submodule sync --recursive'
                 sh 'git submodule update --init --recursive'
             }
         }
@@ -38,7 +45,7 @@ pipeline {
         always {
             junit allowEmptyResults: true, testResults: 'rdf.test/logs/*.xml'
             archiveArtifacts artifacts: 'rdf.test/**', allowEmptyArchive: true
-            sh 'rm -rf rdf.test || true'
+            cleanWs()
         }
     }
 }
