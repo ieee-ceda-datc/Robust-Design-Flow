@@ -10,6 +10,13 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
+                sh 'git submodule update --init --recursive'
+            }
+        }
+
+        stage('Build OpenROAD') {
+            steps {
+                sh 'cd tools/OpenROAD-flow-scripts && ./build_openroad --local'
             }
         }
 
