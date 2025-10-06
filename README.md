@@ -37,7 +37,9 @@ docker run --rm -it \
 ```
 
 The same image can be used by Jenkins (see `Jenkinsfile`) to keep the CI tool
-chain reproducible.
+chain reproducible. When running against a prebuilt installation (e.g.
+`/opt/Robust-Design-Flow`), set `RDF_INSTALL_ROOT` to that path; otherwise the
+scripts default to the current working copy.
 
 #### Academic Point Tool-Based Configurable Flow
 

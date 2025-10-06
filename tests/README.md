@@ -53,6 +53,9 @@ When tool updates legitimately change the reported metrics:
 - The test fixture removes `rdf.test/` after each run. Comment out
   `tearDown()` in `tests/test_robust_design_flow.py` if you need to inspect the
   intermediate flow outputs while debugging.
+- To use a prebuilt installation located elsewhere (for example
+  `/opt/Robust-Design-Flow` on Jenkins), set `RDF_INSTALL_ROOT` before running
+  the regression. When unset, the scripts default to the current working copy.
 - If you choose to run natively (outside Docker), ensure OpenROAD-flow-scripts
   is built, the toolchain is on `PATH`, and Python has `unittest-xml-reporting`
   and `PyYAML` installed.
