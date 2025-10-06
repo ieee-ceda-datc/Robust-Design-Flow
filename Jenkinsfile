@@ -8,10 +8,6 @@ pipeline {
 
     environment {
         PYTHONUNBUFFERED = '1'
-    }
-
-    environment {
-        PYTHONUNBUFFERED = '1'
         XDG_RUNTIME_DIR = '/tmp/runtime-root'
     }
 
