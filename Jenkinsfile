@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'rdf-openroad-ci'
-            args '--user root:root --rm'
-        }
-    }
+    agent any
 
     environment {
         PYTHONUNBUFFERED = '1'
@@ -14,21 +9,24 @@ pipeline {
     stages {
         stage('Workspace Cleanup') {
             steps {
-                deleteDir()
+                cleanWs()
             }
         }
 
         stage('Checkout') {
             steps {
                 checkout scm
-                sh 'git config --global --add safe.directory "$(pwd)"'
-                sh 'git submodule update --init --recursive'
             }
         }
 
-        stage('Run Regression') {
+        stage('Run Regression (Docker)') {
             steps {
-                sh 'python3 tests/run_regression.py'
+                script {
+                    docker.image('rdf-openroad-ci').inside('--user root:root --rm') {
+                        sh 'git submodule update --init --recursive'
+                        sh 'python3 tests/run_regression.py'
+                    }
+                }
             }
         }
     }
