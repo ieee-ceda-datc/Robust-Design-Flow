@@ -23,6 +23,9 @@ pipeline {
                             'PYTHONUNBUFFERED=1',
                             'XDG_RUNTIME_DIR=/tmp/runtime-root'
                         ]) {
+                            githubNotify context: 'rdf-regression',
+                                         status: 'PENDING',
+                                         description: 'Regression started'
                             // sh 'git config --global --add safe.directory "$(pwd)"'
                             // sh 'git submodule update --init --recursive'
                             sh 'python3 tests/run_regression.py'
@@ -34,6 +37,16 @@ pipeline {
     }
 
     post {
+        success {
+            githubNotify context: 'rdf-regression',
+                         status: 'SUCCESS',
+                         description: 'Regression passed'
+        }
+        failure {
+            githubNotify context: 'rdf-regression',
+                         status: 'FAILURE',
+                         description: 'Regression failed'
+        }
         always {
             junit allowEmptyResults: true, testResults: 'rdf.test/logs/*.xml'
             archiveArtifacts artifacts: 'rdf.test/**', allowEmptyArchive: true
