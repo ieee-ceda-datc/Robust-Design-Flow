@@ -10,16 +10,22 @@ pipeline {
         PYTHONUNBUFFERED = '1'
     }
 
+    environment {
+        PYTHONUNBUFFERED = '1'
+        XDG_RUNTIME_DIR = '/tmp/runtime-root'
+    }
+
     stages {
         stage('Workspace Cleanup') {
             steps {
-                cleanWs()
+                deleteDir()
             }
         }
 
         stage('Checkout') {
             steps {
                 checkout scm
+                sh 'git config --global --add safe.directory "$(pwd)"'
                 sh 'git submodule update --init --recursive'
             }
         }
