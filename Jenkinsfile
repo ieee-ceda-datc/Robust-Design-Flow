@@ -25,7 +25,11 @@ pipeline {
                         ]) {
                             githubNotify context: 'rdf-regression',
                                          status: 'PENDING',
-                                         description: 'Regression started'
+                                         description: 'Regression started',
+                                         repo: 'ieee-ceda-datc/Robust-Design-Flow',
+                                         account: 'ieee-ceda-datc',
+                                         sha: env.GIT_COMMIT,
+                                         credentialsId: 'github-rdf-user-pass'
                             // sh 'git config --global --add safe.directory "$(pwd)"'
                             // sh 'git submodule update --init --recursive'
                             sh 'python3 tests/run_regression.py'
@@ -40,12 +44,20 @@ pipeline {
         success {
             githubNotify context: 'rdf-regression',
                          status: 'SUCCESS',
-                         description: 'Regression passed'
+                         description: 'Regression passed',
+                         repo: 'ieee-ceda-datc/Robust-Design-Flow',
+                         account: 'ieee-ceda-datc',
+                         sha: env.GIT_COMMIT,
+                         credentialsId: 'github-rdf-user-pass'
         }
         failure {
             githubNotify context: 'rdf-regression',
                          status: 'FAILURE',
-                         description: 'Regression failed'
+                         description: 'Regression failed',
+                         repo: 'ieee-ceda-datc/Robust-Design-Flow',
+                         account: 'ieee-ceda-datc',
+                         sha: env.GIT_COMMIT,
+                         credentialsId: 'github-rdf-user-pass'
         }
         always {
             junit allowEmptyResults: true, testResults: 'rdf.test/logs/*.xml'
