@@ -23,6 +23,7 @@ pipeline {
             steps {
                 script {
                     docker.image('rdf-openroad-ci').inside('--user root:root --rm') {
+                        sh 'git config --global --add safe.directory "$(pwd)"'
                         sh 'git submodule update --init --recursive'
                         sh 'python3 tests/run_regression.py'
                     }
